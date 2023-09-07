@@ -24,12 +24,24 @@
     <ClCompile Include="clienthandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="processcommand.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="clienthandler1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\mailbox\mailbox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\clienthandler\clienthandler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\processcommand\processcommand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\clienthandler\clienthandler1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

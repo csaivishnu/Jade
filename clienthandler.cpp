@@ -5,6 +5,7 @@
 #include <condition_variable>
 #include "include/mailbox/mailbox.h"
 #include "include/clienthandler/clienthandler.h"
+#include "include/processcommand/processcommand.h"
 using namespace std;
 
 void callbackFunction(mailbox_data_t* response)
@@ -30,9 +31,19 @@ void _client_handler::sendCommand(int clientNumber, mailbox_data_t* command, fun
 	cv[clientNumber].notify_one();					// checkpoint while debugging: notifyone or notifyall
 
 	cv[clientNumber].wait(lock, [temp] { return *temp ? false : true;});
-	sequenceIdIndex[clientNumber]++;
 	mailbox_data_t* response = new mailbox_data_t;
-	ret = mailbox_dequeue_data(responseMailbox, response);
+	while (true)
+	{
+		ret = mailbox_dequeue_data(responseMailbox, response);
+		int seqId;
+		seqId = ((response->header >> 8) & 1023);
+		if (seqId == sequenceIdIndex[clientNumber])
+		{
+			break;
+		}
+	}
+	sequenceIdIndex[clientNumber]++;
+	sequenceIdIndex[clientNumber] %= 1023;
 	callbackFunction(response);
 }
 
@@ -62,8 +73,7 @@ void _client_handler::server(int clientNumber)
 
 		lock.lock();
 		mailbox_data_t* response;
-		response = new mailbox_data_t;
-		*response = *command;
+		response = processCommand(command);
 		ret = mailbox_queue_data(responseMailbox, response);
 		cout << "Server sent the response: ";
 		printData(response);

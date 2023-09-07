@@ -18,7 +18,8 @@ void client0(client_handler *clientHandler)
 	clientHandler->sendCommand(0, command1, callbackFunction);
 
 	mailbox_data_t* command2 = new mailbox_data_t;
-	command2->header = 5;
+	uint32_t one = 1;
+	command2->header = 5 + (one << 8);
 	command2->payload[0] = 2;
 	clientHandler->sendCommand(0, command2, callbackFunction);
 

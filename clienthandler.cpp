@@ -10,7 +10,7 @@ using namespace std;
 
 void callbackFunction(mailbox_data_t* response)
 {
-	cout << "Client recieved the response: ";
+	cout << "Client recieved the response:\t\t";
 	printData(response);
 }
 
@@ -22,13 +22,17 @@ bool helper(client_handler* clientHandler, int clientNumber)
 void _client_handler::sendCommand(int clientNumber, mailbox_data_t* command, function<void(mailbox_data_t*)>callbackFunction)
 {
 	unique_lock<mutex> lock(mtx[clientNumber]);
-	cout << "Client sent the command: ";
+	cout << "Client sent the command:\t\t";
+	uint32_t seqIdIndex = sequenceIdIndex[clientNumber];
+	command->header += (seqIdIndex << 8);
 	printData(command);
 	int ret;
 	ret = mailbox_queue_data(&commandMailbox[clientNumber], command);
 	sequenceId[clientNumber].seq[sequenceIdIndex[clientNumber]] = true;
 	bool* temp = &(sequenceId[clientNumber].seq[sequenceIdIndex[clientNumber]]);
 	cv[clientNumber].notify_one();					// checkpoint while debugging: notifyone or notifyall
+
+	this_thread::sleep_for(chrono::milliseconds(500));
 
 	cv[clientNumber].wait(lock, [temp] { return *temp ? false : true;});
 	mailbox_data_t* response = new mailbox_data_t;
@@ -45,6 +49,9 @@ void _client_handler::sendCommand(int clientNumber, mailbox_data_t* command, fun
 	sequenceIdIndex[clientNumber]++;
 	sequenceIdIndex[clientNumber] %= 1023;
 	callbackFunction(response);
+	lock.unlock();
+
+	this_thread::sleep_for(chrono::milliseconds(2500));
 }
 
 void _client_handler::server(int clientNumber)
@@ -65,7 +72,7 @@ void _client_handler::server(int clientNumber)
 
 		int ret;
 		ret = mailbox_dequeue_data(commandMailbox, command);
-		cout << "Server recieved the command: ";
+		cout << "Server recieved the command:\t\t";
 		printData(command);
 		lock.unlock();
 
@@ -75,11 +82,12 @@ void _client_handler::server(int clientNumber)
 		mailbox_data_t* response;
 		response = processCommand(command);
 		ret = mailbox_queue_data(responseMailbox, response);
-		cout << "Server sent the response: ";
+		cout << "Server sent the response:\t\t";
 		printData(response);
 		sequenceId[clientNumber].seq[sequenceIdIndex[clientNumber]] = false;
-		lock.unlock();
 		cv[clientNumber].notify_one();
+
+		this_thread::sleep_for(chrono::milliseconds(500));
 	}
 }
 

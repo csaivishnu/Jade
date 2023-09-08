@@ -71,8 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Users\csaivishnu\Downloads\Pre-built.2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\csaivishnu\Downloads\Pre-built.2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -132,7 +131,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="clienthandler1.c" />
     <ClCompile Include="clienthandler.cpp" />
     <ClCompile Include="Jade.cpp" />
     <ClCompile Include="mailbox.c" />
@@ -140,7 +138,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\clienthandler\clienthandler.h" />
-    <ClInclude Include="include\clienthandler\clienthandler1.h" />
     <ClInclude Include="include\mailbox\mailbox.h" />
     <ClInclude Include="include\processcommand\processcommand.h" />
   </ItemGroup>

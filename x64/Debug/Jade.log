@@ -1,8 +1,2 @@
-﻿  clienthandler1.c
-  mailbox.c
-  processcommand.c
-  Generating Code...
-  clienthandler.cpp
-  Jade.cpp
-  Generating Code...
+﻿  clienthandler.cpp
   Jade.vcxproj -> C:\Users\csaivishnu\OneDrive - NVIDIA Corporation\main\Jade\x64\Debug\Jade.exe

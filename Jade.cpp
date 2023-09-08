@@ -5,17 +5,24 @@
 using namespace std;
 
 
-void client0(client_handler *clientHandler)
+void client0(client_handler* clientHandler)
 {
 	int clientNumber;
 	clientNumber = 0;
 	thread startServer([clientHandler, clientNumber]() {
 		clientHandler->server(clientNumber);
-	});
-	mailbox_data_t *command1 = new mailbox_data_t;
+		});
+
+
+//	first command: size of command: 5, seq id: 0
+
+	mailbox_data_t* command1 = new mailbox_data_t;
 	command1->header = 5;
 	command1->payload[0] = 2;
 	clientHandler->sendCommand(0, command1, callbackFunction);
+
+
+//	second command: size of command: 5, seq id: 1
 
 	mailbox_data_t* command2 = new mailbox_data_t;
 	uint32_t one = 1;
